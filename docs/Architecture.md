@@ -19,7 +19,8 @@ Memebers:
 - state
 - duration
 - end_time
-- Player
+- player
+- map
 
 ### Control:
 methods:
