@@ -5,7 +5,7 @@
 Вам нужно будет пройти следующие шаги:
 
 - [Скачивание git репозитория](#git)
-- [Установка MVS, ReSharper C++](#install_ide)
+- [Установка QT](#install_ide)
 - [Отправка решения](#code)
 
 ---
@@ -96,16 +96,9 @@ git config --local user.email "<твой email с github.com>"
  (ветка может быть другая)
 </details>
 
-## Установка MVS, ReSharper C++ <a id='install_ide'/>
+## Установка QT <a id='install_ide'/>
+- [Cсылка на официальный сайт](https://www.qt.io/download)
 
-- [Гайд по  установке Microsoft Visual Studio для С++](https://www.youtube.com/watch?v=f9QZQumiC8I) - [ссылка для скачивания](https://visualstudio.microsoft.com/ru/vs/community/)
-
-* [Гайд по установке ReSharper C++](https://www.youtube.com/watch?v=MJJ2GAPg1jE) - [ссылка для скачивания](https://www.jetbrains.com/resharper-cpp/)
-<details><summary><a>Если ReSharper показывает подсказки слишком
-мелкого шрифта:</a></summary>
- <br>Заходим в <mark style="background-color: LightBlue">Tools > Options > Environment > Fonts and Colors</mark>
-  и меняем шрифт для Statement Completion и Editor tooltip, в графе show settings for.</br>
-</details>
 
 ## Отправка решения <a id='code'/>
 

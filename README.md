@@ -1,6 +1,6 @@
 # ActionGame
 
-ActionGame is an action-packed game developed using C++ and the QT framework. This project was created as part of the BSU Cyber Security Faculty Summer Practice.
+ActionGame is an action-packed game developed using C++ and the [QT](https://github.com/qt) framework. This project was created as part of the BSU Cyber Security Faculty Summer Practice.
 
 ## Table of Contents
 - [Introduction](#introduction)
