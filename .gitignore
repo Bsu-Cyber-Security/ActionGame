@@ -127,5 +127,12 @@ compile_commands.json
 *.cxxflags
 *.cflags
 
+[Bb]uild/
+
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+
 
 # End of https://www.toptal.com/developers/gitignore/api/qt,qtcreator,c++
