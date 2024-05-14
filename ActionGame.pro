@@ -9,16 +9,24 @@ CONFIG += c++23
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/main.cpp \
-    src/game.cpp
+    app/src/gamescene.cpp \
+    app/src/pixmap_manager.cpp \
+    app/src/view.cpp \
+    app/src/main.cpp \
+
 
 HEADERS += \
-    include/game.h
-
-FORMS += \
-    forms/game.ui
+    app/include/game_state.h \
+    app/include/pixmap_manager.h \
+    app/include/resource_holder.h \
+    app/include/level.h \
+    app/include/gamescene.h \
+    app/include/view.h \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc
