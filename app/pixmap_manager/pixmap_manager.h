@@ -2,13 +2,13 @@
 
 #include <QPixmap>
 
-#include "resource_holder.h"
+#include "app/resource_holder/resource_holder.h"
 
 class PixmapManager {
    public:
     static PixmapManager* Init();
     static PixmapManager* Instance();
-    QPixmap& getPixmap(TextureID id);
+    QPixmap& getPixmap(int texture_id);
    private:
     PixmapManager();
     PixmapManager(PixmapManager& other) = delete;

@@ -8,9 +8,9 @@
 #include <QPainter>
 #include <QDir>
 
-#include "app/include/gamescene.h"
-#include "app/include/pixmapmanager.h"
-#include "app/include/game_state.h"
+#include "app/scene/game_state.h"
+#include "app/scene/gamescene.h"
+#include "app/pixmap_manager/pixmap_manager.h"
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene(parent)

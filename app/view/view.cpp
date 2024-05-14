@@ -1,6 +1,4 @@
-#include "app/include/view.h"
-#include <QKeyEvent>
-#include <QApplication>
+#include "app/view/view.h"
 
 View::View()
     : m_gameScene(new GameScene(this))

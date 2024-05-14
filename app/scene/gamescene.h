@@ -4,7 +4,7 @@
 #include <QElapsedTimer>
 #include <QTimer>
 
-#include "level.h"
+#include "core/level/level.h"
 
 
 class GameScene : public QGraphicsScene {
@@ -25,11 +25,11 @@ class GameScene : public QGraphicsScene {
     int m_cameraOffsetY;
 
     // Time controll
-    const int FPS = 60;
+    const int m_fps = 60;
     QTimer m_timer;
     QElapsedTimer m_elapsedTimer;
     float m_deltaTime = 0.0f, m_loopTime = 0.0f;
-    const float m_loopSpeed = int(1000.0f/FPS);
+    const float m_loopSpeed = int(1000.0f/m_fps);
 
    protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

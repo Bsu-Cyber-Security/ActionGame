@@ -9,19 +9,20 @@ CONFIG += c++23
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    app/src/gamescene.cpp \
-    app/src/pixmap_manager.cpp \
-    app/src/view.cpp \
-    app/src/main.cpp \
+    app/scene/gamescene.cpp \
+    app/pixmap_manager/pixmap_manager.cpp \
+    app/view/view.cpp \
+    app/main.cpp \
 
 
 HEADERS += \
-    app/include/game_state.h \
-    app/include/pixmap_manager.h \
-    app/include/resource_holder.h \
-    app/include/level.h \
-    app/include/gamescene.h \
-    app/include/view.h \
+    app/pixmap_manager/pixmap_manager.h \
+    app/resource_holder/resource_holder.h \
+    app/scene/game_state.h \
+    app/scene/gamescene.h \
+    app/view/view.h \
+    core/level/level.h \
+    core/player/player.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

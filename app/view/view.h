@@ -1,7 +1,10 @@
 #pragma once
 
 #include <QGraphicsView>
-#include "gamescene.h"
+#include <QKeyEvent>
+#include <QApplication>
+
+#include "app/scene/gamescene.h"
 
 enum class ViewDirection{
     None,
