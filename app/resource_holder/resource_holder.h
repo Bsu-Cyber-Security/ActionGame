@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <Qmap>
 #include <memory>
 #include <QString>
 
@@ -12,8 +12,10 @@ class ResourceHolder {
         const Resource& get(Identifier id) const;
 
     private:
+        Resource Get(Identifier id);
+        void Load(QFile& file);
         void insertResource(Identifier id, std::unique_ptr<Resource> resource);
 
     private:
-        std::map<Identifier, std::unique_ptr<Resource>>	m_resources;
+        Qmap<Identifier, std::unique_ptr<Resource>>	m_resources;
 };
