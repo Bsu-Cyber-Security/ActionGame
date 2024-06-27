@@ -23,7 +23,6 @@ class GameScene : public QGraphicsScene {
     void readLevelsFile(QString pathFile);
     void runLevel();
     void drawMap();
-    void drawStepCounter();
     void drawCurentLevelStatus();
     void renderGameScene();
 
