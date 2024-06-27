@@ -7,7 +7,7 @@
 template <class Identifier, class Resource>
 class ResourceHolder {
     public:
-        void oad(Identifier id, const QString &filename);
+        void load(Identifier id, const QString &filename);
         Resource& get(Identifier id);
         const Resource& get(Identifier id) const;
 
