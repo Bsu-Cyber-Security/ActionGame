@@ -11,8 +11,6 @@ class ResourceHolder {
         Resource& get(Identifier id);
         const Resource& get(Identifier id) const;
 
-        ResourceHolder& instance();
-
     private:
         ResourceHolder() = default;
         void insertResource(Identifier id, std::unique_ptr<Resource> resource);
