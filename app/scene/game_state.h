@@ -4,8 +4,7 @@
 #include <QList>
 
 struct GameState {
-    Player player;
-    Level level;
+    Qpoint player;
     int score;
 
     GameState() : score(0) {
