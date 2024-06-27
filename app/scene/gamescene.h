@@ -18,6 +18,15 @@ class GameScene : public QGraphicsScene {
     void loop();
 
    private:
+    void handlePlayerInput();
+    void resetStatus();
+    void readLevelsFile(QString pathFile);
+    void runLevel();
+    void drawMap();
+    void drawStepCounter();
+    void drawCurentLevelStatus();
+    void renderGameScene();
+
     Level m_level;
     bool m_mapNeedRedraw;
     bool m_levelIsCompleted;
