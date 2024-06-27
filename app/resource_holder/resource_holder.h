@@ -7,13 +7,14 @@
 template <class Identifier, class Resource>
 class ResourceHolder {
     public:
-        void load(Identifier id, const QString &filename);
+        void oad(Identifier id, const QString &filename);
         Resource& get(Identifier id);
         const Resource& get(Identifier id) const;
 
+        ResourceHolder& instance();
+
     private:
-        Resource Get(Identifier id);
-        void Load(QFile& file);
+        ResourceHolder() = default;
         void insertResource(Identifier id, std::unique_ptr<Resource> resource);
 
     private:
