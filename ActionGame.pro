@@ -11,8 +11,8 @@ CONFIG += c++23
 SOURCES += \
     app/scene/gamescene.cpp \
     app/pixmap_manager/pixmap_manager.cpp \
-    app/view/view.cpp \
     app/main.cpp \
+    app/scene/view.cpp
 
 
 HEADERS += \
@@ -20,7 +20,7 @@ HEADERS += \
     app/resource_holder/resource_holder.h \
     app/scene/game_state.h \
     app/scene/gamescene.h \
-    app/view/view.h \
+    app/scene/view.h \
     core/level/level.h \
     core/player/player.h
 

@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QElapsedTimer>
 #include <QTimer>
+#include <QKeyEvent>
 
 #include "core/level/level.h"
 
@@ -11,11 +12,8 @@ class GameScene : public QGraphicsScene {
     Q_OBJECT
    public:
     explicit GameScene(QObject *parent = nullptr);
-
-   signals:
-
-   private slots:
-    void loop();
+   //private slots:
+   // void loop();
 
    private:
     void handlePlayerInput();
@@ -39,10 +37,10 @@ class GameScene : public QGraphicsScene {
     float m_deltaTime = 0.0f, m_loopTime = 0.0f;
     const float m_loopSpeed = int(1000.0f/m_fps);
 
-   protected:
-    virtual void keyPressEvent(QKeyEvent *event) override;
-    virtual void keyReleaseEvent(QKeyEvent *event) override;
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+ // protected:
+    //virtual void keyPressEvent(QKeyEvent *event) override;
+    //virtual void keyReleaseEvent(QKeyEvent *event) override;
+    //virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    //virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    //virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };

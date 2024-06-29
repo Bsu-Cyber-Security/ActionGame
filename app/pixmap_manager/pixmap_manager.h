@@ -6,14 +6,14 @@
 
 class PixmapManager {
    public:
+    enum class Texture{Wall};
     static PixmapManager* Init();
-    static PixmapManager* Instance();
-    QPixmap& getPixmap(int texture_id);
+    QPixmap& getQPixmap(Texture texture);
    private:
     PixmapManager();
     PixmapManager(PixmapManager& other) = delete;
     void operator=(const PixmapManager &) = delete;
 
-    ResourceHolder<int, QPixmap> m_textures;
+    ResourceHolder<Texture, QPixmap> m_textures;
     static PixmapManager* ptr;
 };

@@ -1,5 +1,6 @@
-#pragma once                                                                                                                                          #pragma once
-#include <Qmap>
+#pragma once
+
+#include <Map>
 #include <QDebug>
 #include <memory>
 #include <QString>
@@ -7,18 +8,17 @@
 template <class Identifier, class Resource>
 class ResourceHolder {
    public:
-    ResourceHolder(ResourceHolder& other) = delete;
-    void operator=(const ResourceHolder&)=delete;
-
+    ResourceHolder(){}
     void load(Identifier id, const QString &filename);
     Resource& get(Identifier id);
     const Resource& get(Identifier id) const;
    private:
-    ResourceHolder() = default;
+    ResourceHolder(ResourceHolder& other) = delete;
+    void operator=(const ResourceHolder&)=delete;
     bool insertResource(Identifier id, std::unique_ptr<Resource> resource);
 
    private:
-    QMap<Identifier, std::unique_ptr<Resource>>  m_resources;
+    std::map<Identifier, std::unique_ptr<Resource>>  m_resources;
 };
 
 template<class Identifier, class Resource>
