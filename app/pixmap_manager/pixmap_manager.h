@@ -15,5 +15,5 @@ class PixmapManager {
     void operator=(const PixmapManager &) = delete;
 
     ResourceHolder<int, QPixmap> m_textures;
-    inline static PixmapManager* ptr;
+    static PixmapManager* ptr;
 };
