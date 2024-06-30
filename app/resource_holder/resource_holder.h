@@ -24,17 +24,17 @@ class ResourceHolder {
 template<class Identifier, class Resource>
 void ResourceHolder<Identifier, Resource>::load(Identifier id, const QString &filename)
 {
-    std::unique_ptr<Resource> resource = new Resource();
+    auto resource = std::make_unique<Resource>();
     if(!resource->load(filename)){
-        qDebug()<<"Failed to loaad "<<filename;
+        qDebug() << "Failed to load " << filename;
     }
     else{
-        bool successful = insertResource(id, std::move(resource));
-        if(!successful){
-            qDebug()<<"Failed to insert resource";
+        if(!insertResource(id, std::move(resource))){
+            qDebug() << "Failed to insert resource";
         }
     }
 }
+
 
 template<class Identifier, class Resource>
 Resource& ResourceHolder<Identifier, Resource>::get(Identifier id) {

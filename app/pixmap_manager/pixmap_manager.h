@@ -6,7 +6,7 @@
 
 class PixmapManager {
    public:
-    enum class Texture{Wall};
+    enum class Texture{Fon};
     static PixmapManager* Init();
     QPixmap& getQPixmap(Texture texture);
    private:

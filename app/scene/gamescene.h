@@ -1,19 +1,19 @@
 #pragma once
 
-#include <QGraphicsScene>
+#include "qgraphicsitem.h"
+#include "QGraphicsScene"
 #include <QElapsedTimer>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QPainter>
+#include <vector>
 
-#include "core/level/level.h"
-
+// Убедитесь, что вы включили все необходимые заголовочные файлы для QWidget
 
 class GameScene : public QGraphicsScene {
     Q_OBJECT
    public:
     explicit GameScene(QObject *parent = nullptr);
-   //private slots:
-   // void loop();
 
    private:
     void handlePlayerInput();
@@ -23,24 +23,12 @@ class GameScene : public QGraphicsScene {
     void drawMap();
     void drawCurentLevelStatus();
     void renderGameScene();
+    bool inTheEnd(int);
 
-    Level m_level;
-    bool m_mapNeedRedraw;
-    bool m_levelIsCompleted;
-    int m_cameraOffsetX;
-    int m_cameraOffsetY;
+    QPoint endCoord;
 
-    // Time controll
-    const int m_fps = 60;
-    QTimer m_timer;
-    QElapsedTimer m_elapsedTimer;
-    float m_deltaTime = 0.0f, m_loopTime = 0.0f;
-    const float m_loopSpeed = int(1000.0f/m_fps);
+    bool gameIsActive;
+    short numberOfPlayers;
 
- // protected:
-    //virtual void keyPressEvent(QKeyEvent *event) override;
-    //virtual void keyReleaseEvent(QKeyEvent *event) override;
-    //virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    //virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    //virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    std::vector<QPoint> m_players;
 };
