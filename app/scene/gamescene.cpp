@@ -12,6 +12,18 @@
 #include "app/scene/gamescene.h"
 #include "app/pixmap_manager/pixmap_manager.h"
 
+GameScene::GameScene(QObject *parent)
+    : QGraphicsScene(parent)
+    , m_mapNeedRedraw(false)
+    , m_levelIsCompleted(false)
+    , m_cameraOffsetX(0)
+    , m_cameraOffsetY(0) {
+    setSceneRect(0,0, 640, 480);
+    //connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
+    //m_timer.start(int(1000.0f/FPS));
+    m_elapsedTimer.start();
+}
+
 void GameScene::readLevelsFile(QString pathFile)
 {
     std::vector<std::vector<char>> map(20, std::vector<char>(20));
@@ -42,21 +54,9 @@ void GameScene::readLevelsFile(QString pathFile)
         }
 
         file.close();
-        }
-        else
-        {
+    }
+    else
+    {
         qDebug() << "Error: Failed to open file" << pathFile;
-        }
-}
-
-GameScene::GameScene(QObject *parent)
-    : QGraphicsScene(parent)
-    , m_mapNeedRedraw(false)
-    , m_levelIsCompleted(false)
-    , m_cameraOffsetX(0)
-    , m_cameraOffsetY(0) {
-    setSceneRect(0,0, 640, 480);
-    //connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
-    //m_timer.start(int(1000.0f/FPS));
-    m_elapsedTimer.start();
+    }
 }
