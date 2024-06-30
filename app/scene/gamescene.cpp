@@ -18,8 +18,10 @@ GameScene::GameScene(QObject *parent)
     , m_levelIsCompleted(false)
     , m_cameraOffsetX(0)
     , m_cameraOffsetY(0) {
-    setSceneRect(0,0, 640, 480);
+    setSceneRect(0,0, 800, 800);
     //connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
     //m_timer.start(int(1000.0f/FPS));
-    m_elapsedTimer.start();
+    //m_elapsedTimer.start();
+    readLevelsFile("");
+    runLevel();
 }
