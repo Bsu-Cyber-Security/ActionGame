@@ -7,6 +7,8 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <vector>
+#include <QPushButton>
+
 // Убедитесь, что вы включили все необходимые заголовочные файлы для QWidget
 
 class GameScene : public QGraphicsScene {
@@ -27,6 +29,12 @@ class GameScene : public QGraphicsScene {
     QPoint endCoord;
     QPoint startCoord;
 
+
+    QPushButton* button = new QPushButton("Click me");
+
     bool gameIsActive;
+   private slots:
+    void Click();
+
 
 };

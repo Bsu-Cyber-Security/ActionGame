@@ -8,6 +8,7 @@
 #include <QGraphicsSimpleTextItem>
 #include <QPoint>
 #include <QDir>
+#include <QPushButton>
 #include <cmath>
 #include <map>
 
@@ -15,9 +16,12 @@
 #include "app/scene/gamescene.h"
 #include "app/pixmap_manager/pixmap_manager.h"
 
+int count = 0;
+
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene(parent)
     , numberOfPlayers(2){
+    connect(button,&QPushButton::clicked,this,&GameScene::Click);
     setSceneRect(0,0, 800, 800);
     readLevelsFile("C:/Users/vtali/Documents/ActionGame/Resource/map.txt");
     drawMap();
@@ -25,8 +29,23 @@ GameScene::GameScene(QObject *parent)
 }
 
 std::vector<std::vector<char>> map(20, std::vector<char>(20));
+std::vector<QPoint> path;
 std::map<int, QPixmap> playerImages;
 
+void GameScene::Click(){
+
+        QPixmap playerPixmap = playerImages[1];
+        // Масштабируем картинку до заданного размера
+        playerPixmap = playerPixmap.scaled(40,40, Qt::KeepAspectRatio);
+        // Создаем графический элемент для картинки игрока
+        QGraphicsPixmapItem* playerItem = new QGraphicsPixmapItem(playerPixmap);
+        // Устанавливаем позицию графического элемента
+        playerItem->setPos(path[count].x(),path[count].y());
+        // Устанавливаем выравнивание по верхнему краю
+        // Добавляем графический элемент на сцену
+        this->addItem(playerItem);
+        count+=1;
+}
 void GameScene::readLevelsFile(QString pathFile)
 {
     QFile file(pathFile);
@@ -54,6 +73,7 @@ void GameScene::readLevelsFile(QString pathFile)
                         this->startCoord.setY(j);
                     }
                 }
+
             }
 
             else
@@ -61,7 +81,6 @@ void GameScene::readLevelsFile(QString pathFile)
                 qDebug() << "Error: Invalid map data in line" << i + 1;
             }
         }
-
         file.close();
     }
     else
@@ -109,6 +128,10 @@ void GameScene::drawMap(){
     // Создаем элемент для фона и устанавливаем его размер равным размеру сцены
     QGraphicsPixmapItem* backgroundItem = addPixmap(background.scaled(width(), height()));
 
+    button->setGeometry(10, 10, 100, 30); // Устанавливаем размер и координаты кнопки
+    button->show(); // Отображаем кнопку
+
+
     QPixmap road("C:/Users/vtali/Documents/ActionGame/Resource/road.jpg"); // Путь к изображению дорожки
     int tileSize = 40; // Размер одной плитки
 
@@ -140,7 +163,7 @@ void GameScene::drawPlayers(std::vector<std::pair<QPoint, QString>>& m_players) 
     // Получаем количество игроков
     const int numPlayers = m_players.size();
     // Определяем размер картинок игроков
-    int playerImageSize = cellSize / numPlayers;
+    int playerImageSize = 40;
     // Перебираем всех игроков
     for (size_t i = 0; i < numPlayers; ++i) {
         QPixmap playerPixmap = playerImages[i];
@@ -152,7 +175,7 @@ void GameScene::drawPlayers(std::vector<std::pair<QPoint, QString>>& m_players) 
         int x = startCoord.x() + i*playerImageSize;
         int y = startCoord.y();
         // Устанавливаем позицию графического элемента
-        playerItem->setPos(x*39, y*39);
+        playerItem->setPos(360, 320);
         // Устанавливаем выравнивание по верхнему краю
         // Добавляем графический элемент на сцену
         this->addItem(playerItem);
