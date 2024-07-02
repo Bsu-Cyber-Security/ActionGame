@@ -11,6 +11,13 @@
 #include <QPushButton>
 #include <cmath>
 #include <map>
+#include <QHBoxLayout>
+#include <QApplication>
+#include <QWidget>
+#include <QLabel>
+#include <QMovie>
+#include <QTimer>
+#include <QRandomGenerator>
 
 #include "app/scene/game_state.h"
 #include "app/scene/gamescene.h"
@@ -18,33 +25,137 @@
 
 int count = 0;
 
-GameScene::GameScene(QObject *parent)
-    : QGraphicsScene(parent)
-    , numberOfPlayers(2){
-    connect(button,&QPushButton::clicked,this,&GameScene::Click);
-    setSceneRect(0,0, 800, 800);
-    readLevelsFile("C:/Users/vtali/Documents/ActionGame/Resource/map.txt");
+
+GameScene::GameScene(QObject *parent): QGraphicsScene(parent), numberOfPlayers(2)
+{
+    // Создаем новое окно для кнопки
+    QWidget* buttonWindow = new QWidget();
+    buttonWindow->setWindowTitle("Кнопка");
+    buttonWindow->setFixedSize(200, 200);
+
+            // Создаем кнопку и добавляем ее в правый нижний угол окна
+    QPushButton* button = new QPushButton("Клик");
+    QHBoxLayout* layout = new QHBoxLayout();
+    layout->addStretch();
+    layout->addWidget(button);
+    QVBoxLayout* mainLayout = new QVBoxLayout();
+    mainLayout->addStretch();
+    mainLayout->addLayout(layout);
+    buttonWindow->setLayout(mainLayout);
+
+
+            // Подключаем сигнал нажатия кнопки к слоту Click()
+    connect(button, &QPushButton::clicked, this, &GameScene::showDiceAnimation);
+
+    buttonWindow->show(); // Показываем окно с кнопкой
+
+
+            // Остальной код конструктора GameScene
+    setSceneRect(0, 0, 800, 800);
+    readLevelsFile("C:/Users/nikit/ActionGame/Resource/map.txt");
     drawMap();
     runLevel();
 }
+
 
 std::vector<std::vector<char>> map(20, std::vector<char>(20));
 std::vector<QPoint> path;
 std::map<int, QPixmap> playerImages;
 
+
+void GameScene::showDiceAnimation() {
+
+    int result = QRandomGenerator::global()->generate() % 6 + 1;
+
+
+    QString gifPath;
+    switch (result) {
+        case 1:
+            gifPath = "C:/Users/nikit/ActionGame/Resource/1dis.gif";
+            break;
+        case 2:
+            gifPath = "C:/Users/nikit/ActionGame/Resource/2dis.gif";
+            break;
+        case 3:
+            gifPath = "C:/Users/nikit/ActionGame/Resource/3dis.gif";
+            break;
+        case 4:
+            gifPath = "C:/Users/nikit/ActionGame/Resource/4dis.gif";
+            break;
+        case 5:
+            gifPath = "C:/Users/nikit/ActionGame/Resource/5dis.gif";
+            break;
+        case 6:
+            gifPath = "C:/Users/nikit/ActionGame/Resource/6dis.gif";
+            break;
+    }
+
+
+    QWidget* animationWindow = new QWidget();
+    animationWindow->setWindowTitle("Анимация костей");
+    animationWindow->setFixedSize(300, 450);
+
+
+    QLabel* diceLabel = new QLabel(animationWindow);
+    diceLabel->setAlignment(Qt::AlignCenter);
+
+
+    QMovie* movie = new QMovie(gifPath);
+    diceLabel->setMovie(movie);
+
+    QVBoxLayout* layout = new QVBoxLayout(animationWindow);
+    layout->addWidget(diceLabel);
+    animationWindow->setLayout(layout);
+
+    movie->start();
+
+
+
+    QTimer* timer = new QTimer(animationWindow);
+    QObject::connect(timer, &QTimer::timeout, [movie]() {
+        movie->stop();
+    });
+    switch (result)
+    {
+        case 1:
+            timer->start(3120);
+            break;
+        case 2:
+            timer->start(4320);
+            break;
+        case 3:
+            timer->start(3220);
+            break;
+        case 4:
+            timer->start(4420);
+            break;
+        case 5:
+            timer->start(4420);
+            break;
+        case 6:
+            timer->start(3220);
+            break;
+        default:
+            break;
+    }
+
+
+    animationWindow->show();
+}
+
 void GameScene::Click(){
 
-        QPixmap playerPixmap = playerImages[1];
-        // Масштабируем картинку до заданного размера
-        playerPixmap = playerPixmap.scaled(40,40, Qt::KeepAspectRatio);
-        // Создаем графический элемент для картинки игрока
-        QGraphicsPixmapItem* playerItem = new QGraphicsPixmapItem(playerPixmap);
-        // Устанавливаем позицию графического элемента
-        playerItem->setPos(path[count].x(),path[count].y());
-        // Устанавливаем выравнивание по верхнему краю
-        // Добавляем графический элемент на сцену
-        this->addItem(playerItem);
-        count+=1;
+    QPixmap playerPixmap = playerImages[1];
+    // Масштабируем картинку до заданного размера
+    playerPixmap = playerPixmap.scaled(40,40, Qt::KeepAspectRatio);
+    // Создаем графический элемент для картинки игрока
+    QGraphicsPixmapItem* playerItem = new QGraphicsPixmapItem(playerPixmap);
+    // Устанавливаем позицию графического элемента
+    playerItem->setPos(path[count].x(),path[count].y());
+    // Устанавливаем выравнивание по верхнему краю
+    // Добавляем графический элемент на сцену
+    this->addItem(playerItem);
+    count+=1;
 }
 void GameScene::readLevelsFile(QString pathFile)
 {
@@ -124,15 +235,13 @@ void GameScene::runLevel(){
 }
 
 void GameScene::drawMap(){
-    QPixmap background ("C:/Users/vtali/Documents/ActionGame/Resource/2.jpg");
+    QPixmap background ("C:/Users/nikit/ActionGame/Resource/2.jpg");
     // Создаем элемент для фона и устанавливаем его размер равным размеру сцены
     QGraphicsPixmapItem* backgroundItem = addPixmap(background.scaled(width(), height()));
 
-    button->setGeometry(10, 10, 100, 30); // Устанавливаем размер и координаты кнопки
-    button->show(); // Отображаем кнопку
 
 
-    QPixmap road("C:/Users/vtali/Documents/ActionGame/Resource/road.jpg"); // Путь к изображению дорожки
+    QPixmap road("C:/Users/nikit/ActionGame/Resource/road.jpg"); // Путь к изображению дорожки
     int tileSize = 40; // Размер одной плитки
 
             // Проходим по матрице карты и рисуем дорожки
@@ -153,8 +262,8 @@ void GameScene::drawMap(){
 
 void GameScene::initializePlayerImages() {
     // Инициализация изображений игроков
-    playerImages[0] = QPixmap("C:/Users/vtali/Documents/ActionGame/Resource/ball.png");
-    playerImages[1] = QPixmap("C:/Users/vtali/Documents/ActionGame/Resource/cloud.png");
+    playerImages[0] = QPixmap("C:/Users/nikit/ActionGame/Resource/ball.png");
+    playerImages[1] = QPixmap("C:/Users/nikit/ActionGame/Resource/cloud.png");
 }
 
 void GameScene::drawPlayers(std::vector<std::pair<QPoint, QString>>& m_players) {
