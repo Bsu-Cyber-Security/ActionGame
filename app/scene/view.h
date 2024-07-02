@@ -9,8 +9,6 @@ class View : public QGraphicsView
    public:
     explicit View();
 
-   signals:
-
    private:
     GameScene* m_gameScene;
     bool m_left, m_right, m_up, m_down;
