@@ -7,7 +7,6 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <vector>
-
 // Убедитесь, что вы включили все необходимые заголовочные файлы для QWidget
 
 class GameScene : public QGraphicsScene {
@@ -15,20 +14,19 @@ class GameScene : public QGraphicsScene {
    public:
     explicit GameScene(QObject *parent = nullptr);
 
+     short numberOfPlayers;
+
    private:
-    void handlePlayerInput();
     void resetStatus();
     void readLevelsFile(QString pathFile);
     void runLevel();
     void drawMap();
-    void drawCurentLevelStatus();
-    void renderGameScene();
-    bool inTheEnd(int);
+    void drawPlayers(std::vector<std::pair<QPoint, QString>>&);
+    void initializePlayerImages();
 
     QPoint endCoord;
+    QPoint startCoord;
 
     bool gameIsActive;
-    short numberOfPlayers;
 
-    std::vector<QPoint> m_players;
 };

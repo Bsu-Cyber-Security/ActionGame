@@ -1,67 +1,69 @@
-#pragma once
+#ifndef RESOURCE_HOLDER_H
+#define RESOURCE_HOLDER_H
 
-#include <Map>
-#include <QDebug>
+#include <map>
+#include <string>
 #include <memory>
+#include <stdexcept>
+#include <cassert>
 #include <QString>
+#include <QDebug>
 
-template <class Identifier, class Resource>
-class ResourceHolder {
+template <typename Resource, typename Identifier>
+class ResourceHolder
+{
    public:
-    ResourceHolder(){}
     void load(Identifier id, const QString &filename);
     Resource& get(Identifier id);
     const Resource& get(Identifier id) const;
-   private:
-    ResourceHolder(ResourceHolder& other) = delete;
-    void operator=(const ResourceHolder&)=delete;
-    bool insertResource(Identifier id, std::unique_ptr<Resource> resource);
 
    private:
-    std::map<Identifier, std::unique_ptr<Resource>>  m_resources;
+    void insertResource(Identifier id, std::unique_ptr<Resource> resource);
+
+
+   private:
+    std::map<Identifier, std::unique_ptr<Resource>> mResourceMap;
 };
 
-template<class Identifier, class Resource>
-void ResourceHolder<Identifier, Resource>::load(Identifier id, const QString &filename)
+template <typename Resource, typename Identifier>
+void ResourceHolder<Resource, Identifier>::load(Identifier id, const QString& filename)
 {
-    auto resource = std::make_unique<Resource>();
-    if(!resource->load(filename)){
-        qDebug() << "Failed to load " << filename;
+    // Create and load resource
+    std::unique_ptr<Resource> resource(new Resource());
+    if (!resource->load(filename))
+    {
+        //throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
+        qDebug() << "ResourceHolder::load - Failed to load " + filename;
     }
-    else{
-        if(!insertResource(id, std::move(resource))){
-            qDebug() << "Failed to insert resource";
-        }
-    }
+
+            // If loading successful, insert resource to map
+    insertResource(id, std::move(resource));
 }
 
+template <typename Resource, typename Identifier>
+Resource& ResourceHolder<Resource, Identifier>::get(Identifier id)
+{
+    auto found = mResourceMap.find(id);
+    assert(found != mResourceMap.end());
 
-template<class Identifier, class Resource>
-Resource& ResourceHolder<Identifier, Resource>::get(Identifier id) {
-    auto found = m_resources.find(id);
-    if (found != m_resources.end()) {
-        return *found->second;
-    } else {
-        throw std::runtime_error("Resource not found.");
-    }
     return *found->second;
 }
 
-template<class Identifier, class Resource>
-const Resource& ResourceHolder<Identifier, Resource>::get(Identifier id) const{
-    auto found = m_resources.find(id);
-    if (found != m_resources.end()) {
-        return *found->second;
-    } else {
-        throw std::runtime_error("Resource not found.");
-    }
+template <typename Resource, typename Identifier>
+const Resource& ResourceHolder<Resource, Identifier>::get(Identifier id) const
+{
+    auto found = mResourceMap.find(id);
+    assert(found != mResourceMap.end());
+
+    return *found->second;
 }
 
-template<class Identifier, class Resource>
-bool ResourceHolder<Identifier, Resource>::insertResource(Identifier id, std::unique_ptr<Resource> resource) {
-    auto inserted = m_resources.insert(std::make_pair(id, std::move(resource)));
-    if (!inserted.second) {
-        return false;
-    }
-    return true;
+template <typename Resource, typename Identifier>
+void ResourceHolder<Resource, Identifier>::insertResource(Identifier id, std::unique_ptr<Resource> resource)
+{
+    // Insert and check success
+    auto inserted = mResourceMap.insert(std::make_pair(id, std::move(resource)));
+    assert(inserted.second);
 }
+
+#endif // RESOURCE_HOLDER_H
