@@ -18,6 +18,8 @@
 #include <QMovie>
 #include <QTimer>
 #include <QRandomGenerator>
+#include <QDebug>
+#include <iostream>
 
 #include "app/scene/game_state.h"
 #include "app/scene/gamescene.h"
@@ -55,6 +57,7 @@ GameScene::GameScene(QObject *parent): QGraphicsScene(parent), numberOfPlayers(2
     readLevelsFile("C:/Users/nikit/ActionGame/Resource/map.txt");
     drawMap();
     runLevel();
+
 }
 
 
@@ -157,51 +160,45 @@ void GameScene::Click(){
     this->addItem(playerItem);
     count+=1;
 }
-void GameScene::readLevelsFile(QString pathFile)
-{
+
+void GameScene::readLevelsFile(QString pathFile) {
     QFile file(pathFile);
-
-    if (file.open(QIODevice::ReadOnly))
-    {
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
+        std::vector<std::vector<int>> map(20, std::vector<int>(20, -1)); // Initialize with -1 for walls
 
-        for (int i = 0; i < 20; ++i)
-        {
+        int row = 0;
+        while (!in.atEnd() && row < 20) { // Limit to 20 rows
             QString line = in.readLine();
-            QStringList cells = line.split(' ');
+            if (!line.isEmpty()) {
+                QStringList elements = line.split(" "); // Split by spaces
 
-            if (cells.size() == 20)
-            {
-                for (int j = 0; j < 20; ++j)
-                {
-                    map[i][j] = cells[j].toLatin1()[0];
-                    if(map[i][j] == '3'){
-                        this->endCoord.setX(i);
-                        this->endCoord.setY(j);
-                    }
-                    else if(map[i][j == '2']){
-                        this->startCoord.setX(i);
-                        this->startCoord.setY(j);
-                    }
+                for (int col = 0; col < elements.size() && col < 20; ++col) {
+                    int value = elements[col].toInt();
+                    map[row][col] = value;
                 }
-
-            }
-
-            else
-            {
-                qDebug() << "Error: Invalid map data in line" << i + 1;
+                row++;
             }
         }
         file.close();
-    }
-    else
-    {
-        qDebug() << "Error: Failed to open file" << pathFile;
-    }
-}
 
+                // For debugging
+        std::cout << "Map Contents:\n";
+        for (int row = 0; row < 20; ++row) {
+            for (int col = 0; col < 20; ++col) {
+                std::cout << map[row][col] << " ";
+            }
+            std::cout << std::endl;
+        }
+    } else {
+        std::cerr << "Failed to open file: " << pathFile.toStdString() << std::endl;
+    }
+
+}
 void GameScene::runLevel(){
     std::vector<std::pair<QPoint, QString>> m_players(this->numberOfPlayers);
+
+
 
     //Инциализация игроков
     for(auto player : m_players)  {
@@ -229,10 +226,9 @@ void GameScene::runLevel(){
                 //drawBoard(playerIndex); // Перерисовываем доску для текущего игрока
             }
 
-                //resetStatus(playerIndex); // Сбрасываем статус для следующего обновления цикла
+        }   //resetStatus(playerIndex); // Сбрасываем статус для следующего обновления цикла
         }
     }
-}
 
 void GameScene::drawMap(){
     QPixmap background ("C:/Users/nikit/ActionGame/Resource/2.jpg");
@@ -260,7 +256,8 @@ void GameScene::drawMap(){
     }
 }
 
-void GameScene::initializePlayerImages() {
+void GameScene::initializePlayerImages()
+{
     // Инициализация изображений игроков
     playerImages[0] = QPixmap("C:/Users/nikit/ActionGame/Resource/ball.png");
     playerImages[1] = QPixmap("C:/Users/nikit/ActionGame/Resource/cloud.png");
