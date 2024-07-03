@@ -17,7 +17,7 @@ class GameScene : public QGraphicsScene {
     Q_OBJECT
    public:
     explicit GameScene(QObject *parent = nullptr);
-     short numberOfPlayers;
+    short numberOfPlayers;
 
    private:
     void resetStatus();
@@ -41,8 +41,6 @@ class GameScene : public QGraphicsScene {
 
     bool gameIsActive;
     bool CompareCoord(int);
-   // private slots:
-   //  void Click();
-
-
+    // private slots:
+    //  void Click();
 };

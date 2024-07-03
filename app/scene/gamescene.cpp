@@ -41,7 +41,7 @@ GameScene::GameScene(QObject *parent): QGraphicsScene(parent), numberOfPlayers(2
     mainLayout->addLayout(layout);
     buttonWindow->setLayout(mainLayout);
 
-    //connect(button, &QPushButton::clicked, this, &GameScene::showDiceAnimation);
+    // connect(button, &QPushButton::clicked, this, &GameScene::redrawPlayers);
     buttonWindow->show(); // Показываем окно с кнопкой
 
 
@@ -123,7 +123,7 @@ void GameScene::readLevelsFile(QString pathFile) {
         file.close();
 
 
-        // For debugging
+                // For debugging
         std::cout << "Map Contents:\n";
         for (int row = 0; row < 20; ++row) {
             for (int col = 0; col < 20; ++col) {
@@ -224,21 +224,6 @@ void GameScene::initializePlayerImages()
     // Инициализация изображений игроков
     playerImages[0] = QPixmap("C:/Users/vtali/Documents/ActionGame/Resource/cloud.png");
     playerImages[1] = QPixmap("C:/Users/vtali/Documents/ActionGame/Resource/ball.png");
-    QPixmap playerPixmap0 = playerImages[0];
-    // Масштабируем картинку до заданного размера
-    playerPixmap0 = playerPixmap0.scaled(40, 40, Qt::KeepAspectRatio);
-    // Создаем графический элемент для картинки игрока
-    QGraphicsPixmapItem* playerItem0 = new QGraphicsPixmapItem(playerPixmap0);
-    playerItem0->setPos(coordination[0]);
-    this->addItem(playerItem0);
-    QPixmap playerPixmap1 = playerImages[1];
-    // Масштабируем картинку до заданного размера
-    playerPixmap1 = playerPixmap1.scaled(40, 40, Qt::KeepAspectRatio);
-    // Создаем графический элемент для картинки игрока
-    QGraphicsPixmapItem* playerItem1 = new QGraphicsPixmapItem(playerPixmap1);
-    playerItem1->setPos(coordination[0]);
-    this->addItem(playerItem1);
-
 }
 
 std::vector<QGraphicsPixmapItem*> playerGraphicsItems;
@@ -254,7 +239,7 @@ void GameScene::redrawPlayers(std::vector<int>& m, int player_index) {
         playerGraphicsItems.resize(numPlayers, nullptr);
     }
 
-    // Если у игрока уже есть графический элемент, удаляем его
+            // Если у игрока уже есть графический элемент, удаляем его
     if (playerGraphicsItems[player_index] != nullptr) {
         this->removeItem(playerGraphicsItems[player_index]);
         delete playerGraphicsItems[player_index];
