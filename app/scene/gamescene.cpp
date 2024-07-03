@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <cmath>
 #include <map>
+#include <QMessageBox>
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QWidget>
@@ -20,14 +21,9 @@
 #include <QRandomGenerator>
 #include <QDebug>
 #include <iostream>
-
-#include "app/scene/game_state.h"
+#include <QMessageBox>
+#include <algorithm>
 #include "app/scene/gamescene.h"
-#include "app/pixmap_manager/pixmap_manager.h"
-
-int count = 0;
-
-
 GameScene::GameScene(QObject *parent): QGraphicsScene(parent), numberOfPlayers(2)
 {
     // Создаем новое окно для кнопки
@@ -45,127 +41,71 @@ GameScene::GameScene(QObject *parent): QGraphicsScene(parent), numberOfPlayers(2
     mainLayout->addLayout(layout);
     buttonWindow->setLayout(mainLayout);
 
-
-            // Подключаем сигнал нажатия кнопки к слоту Click()
-    connect(button, &QPushButton::clicked, this, &GameScene::showDiceAnimation);
-
+    //connect(button, &QPushButton::clicked, this, &GameScene::showDiceAnimation);
     buttonWindow->show(); // Показываем окно с кнопкой
 
 
             // Остальной код конструктора GameScene
     setSceneRect(0, 0, 800, 800);
-    readLevelsFile("C:/Users/nikit/ActionGame/Resource/map.txt");
+    readLevelsFile("C:/Users/vtali/Documents/ActionGame/Resource/map.txt");
     drawMap();
     runLevel();
 
 }
 
 
-std::vector<std::vector<char>> map(20, std::vector<char>(20));
-std::vector<QPoint> path;
+std::vector<std::vector<int>> map(20, std::vector<int>(20));
 std::map<int, QPixmap> playerImages;
+std::vector<QPoint> coordination(37);
+
+// void GameScene::showDiceAnimation(int result) {
+
+//     QString gifPath;
+//     switch (result) {
+//         case 1:
+//             gifPath = "D:/Qt/ActionGame/Resource/1dis.gif";
+//             break;
+//         case 2:
+//             gifPath ="D:/Qt/ActionGame/Resource/2dis.gif" ;
+//             break;
+//         case 3:
+//             gifPath = "D:/Qt/ActionGame/Resource/3dis.gif";
+//             break;
+//         case 4:
+//             gifPath = "D:/Qt/ActionGame/Resource/4dis.gif";
+//             break;
+//         case 5:
+//             gifPath = "D:/Qt/ActionGame/Resource/5dis.gif" ;
+//             break;
+//         case 6:
+//             gifPath = "D:/Qt/ActionGame/Resource/6dis.gif";
+//             break;
+//     }
 
 
-void GameScene::showDiceAnimation() {
-
-    int result = QRandomGenerator::global()->generate() % 6 + 1;
-
-
-    QString gifPath;
-    switch (result) {
-        case 1:
-            gifPath = "C:/Users/nikit/ActionGame/Resource/1dis.gif";
-            break;
-        case 2:
-            gifPath = "C:/Users/nikit/ActionGame/Resource/2dis.gif";
-            break;
-        case 3:
-            gifPath = "C:/Users/nikit/ActionGame/Resource/3dis.gif";
-            break;
-        case 4:
-            gifPath = "C:/Users/nikit/ActionGame/Resource/4dis.gif";
-            break;
-        case 5:
-            gifPath = "C:/Users/nikit/ActionGame/Resource/5dis.gif";
-            break;
-        case 6:
-            gifPath = "C:/Users/nikit/ActionGame/Resource/6dis.gif";
-            break;
-    }
+//     QWidget* animationWindow = new QWidget();
+//     animationWindow->setWindowTitle("Анимация костей");
+//     animationWindow->setFixedSize(300, 450);
 
 
-    QWidget* animationWindow = new QWidget();
-    animationWindow->setWindowTitle("Анимация костей");
-    animationWindow->setFixedSize(300, 450);
+//     QLabel* diceLabel = new QLabel(animationWindow);
+//     diceLabel->setAlignment(Qt::AlignCenter);
 
 
-    QLabel* diceLabel = new QLabel(animationWindow);
-    diceLabel->setAlignment(Qt::AlignCenter);
+//     QMovie* movie = new QMovie(gifPath);
+//     diceLabel->setMovie(movie);
 
-
-    QMovie* movie = new QMovie(gifPath);
-    diceLabel->setMovie(movie);
-
-    QVBoxLayout* layout = new QVBoxLayout(animationWindow);
-    layout->addWidget(diceLabel);
-    animationWindow->setLayout(layout);
-
-    movie->start();
-
-
-
-    QTimer* timer = new QTimer(animationWindow);
-    QObject::connect(timer, &QTimer::timeout, [movie]() {
-        movie->stop();
-    });
-    switch (result)
-    {
-        case 1:
-            timer->start(3120);
-            break;
-        case 2:
-            timer->start(4320);
-            break;
-        case 3:
-            timer->start(3220);
-            break;
-        case 4:
-            timer->start(4420);
-            break;
-        case 5:
-            timer->start(4420);
-            break;
-        case 6:
-            timer->start(3220);
-            break;
-        default:
-            break;
-    }
-
-
-    animationWindow->show();
-}
-
-void GameScene::Click(){
-
-    QPixmap playerPixmap = playerImages[1];
-    // Масштабируем картинку до заданного размера
-    playerPixmap = playerPixmap.scaled(40,40, Qt::KeepAspectRatio);
-    // Создаем графический элемент для картинки игрока
-    QGraphicsPixmapItem* playerItem = new QGraphicsPixmapItem(playerPixmap);
-    // Устанавливаем позицию графического элемента
-    playerItem->setPos(path[count].x(),path[count].y());
-    // Устанавливаем выравнивание по верхнему краю
-    // Добавляем графический элемент на сцену
-    this->addItem(playerItem);
-    count+=1;
-}
+//     QVBoxLayout* layout = new QVBoxLayout(animationWindow);
+//     layout->addWidget(diceLabel);
+//     animationWindow->setLayout(layout);
+//     movie->start();
+//     animationWindow->show();
+// }
 
 void GameScene::readLevelsFile(QString pathFile) {
     QFile file(pathFile);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&file);
-        std::vector<std::vector<int>> map(20, std::vector<int>(20, -1)); // Initialize with -1 for walls
+        QTextStream in(&file);// Initialize with -1 for walls
 
         int row = 0;
         while (!in.atEnd() && row < 20) { // Limit to 20 rows
@@ -182,7 +122,8 @@ void GameScene::readLevelsFile(QString pathFile) {
         }
         file.close();
 
-                // For debugging
+
+        // For debugging
         std::cout << "Map Contents:\n";
         for (int row = 0; row < 20; ++row) {
             for (int col = 0; col < 20; ++col) {
@@ -190,65 +131,87 @@ void GameScene::readLevelsFile(QString pathFile) {
             }
             std::cout << std::endl;
         }
+        for (int row = 0; row < 20; ++row) {
+            for (int col = 0; col < 20; ++col) {
+                if (map[row][col] != -1){
+                    QPoint c;
+                    c.setX(40*(col));
+                    c.setY(40*(row));
+                    coordination[map[row][col]] = c;
+                }
+            }
+        }
     } else {
         std::cerr << "Failed to open file: " << pathFile.toStdString() << std::endl;
     }
 
 }
-void GameScene::runLevel(){
-    std::vector<std::pair<QPoint, QString>> m_players(this->numberOfPlayers);
 
-
-
-    //Инциализация игроков
-    for(auto player : m_players)  {
-        player.first = startCoord;
+bool GameScene::CompareCoord(int c){
+    if(c >= 37){
+        return true;
     }
-    //Игровой цикл
+    return false;
+}
+
+
+void GameScene::runLevel() {
+    std::vector<int> position(numberOfPlayers, 0);
+    QMessageBox* victory_window = new QMessageBox();
+    int winningPlayerIndex;
+
     initializePlayerImages();
-    drawPlayers(m_players);
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    while(gameIsActive)
-    {
-        for(int playerIndex = 0; playerIndex < numberOfPlayers; ++playerIndex)
-        {
-            std::srand(time(0));
-            int roll = std::rand()%6 + 1;
-
-            if(m_players[playerIndex].first == this->endCoord)
-            {
+    while (gameIsActive) {
+        for (int playerIndex = 0; playerIndex < numberOfPlayers; ++playerIndex) {
+            int roll = std::rand() % 6 + 1;
+            position[playerIndex] += roll;
+            redrawPlayers(position, playerIndex);
+            if (CompareCoord(position[playerIndex])) {
                 gameIsActive = false; // Завершаем игру
+                winningPlayerIndex = playerIndex;
                 break; // Выходим из цикла
             }
-            else
-            {
-                //updatePlayerStatus(playerIndex); // Обновляем статус текущего игрока
-                //drawBoard(playerIndex); // Перерисовываем доску для текущего игрока
-            }
-
-        }   //resetStatus(playerIndex); // Сбрасываем статус для следующего обновления цикла
         }
     }
 
+    QString message = "Игрок " + QString::number(winningPlayerIndex + 1) + " победил!";
+    victory_window->setText(message);
+    victory_window->setWindowTitle("Победа!");
+
+    QPushButton* playAgainButton = victory_window->addButton(tr("Играть заново"), QMessageBox::AcceptRole);
+    QPushButton* closeButton = victory_window->addButton(tr("Закрыть приложение"), QMessageBox::RejectRole);
+
+    QObject::connect(playAgainButton, &QPushButton::clicked, [=]() {
+        runLevel();
+    });
+
+    QObject::connect(closeButton, &QPushButton::clicked, [=]() {
+        QApplication::quit();
+    });
+
+    victory_window->exec();
+}
 void GameScene::drawMap(){
-    QPixmap background ("C:/Users/nikit/ActionGame/Resource/2.jpg");
+    QPixmap background ("C:/Users/vtali/Documents/ActionGame/Resource/2.jpg");
     // Создаем элемент для фона и устанавливаем его размер равным размеру сцены
     QGraphicsPixmapItem* backgroundItem = addPixmap(background.scaled(width(), height()));
 
 
 
-    QPixmap road("C:/Users/nikit/ActionGame/Resource/road.jpg"); // Путь к изображению дорожки
+    QPixmap road("C:/Users/vtali/Documents/ActionGame/Resource/road.jpg"); // Путь к изображению дорожки
     int tileSize = 40; // Размер одной плитки
 
             // Проходим по матрице карты и рисуем дорожки
     for (int i = 0; i < map.size(); ++i) {
         for (int j = 0; j < map[i].size(); ++j) {
-            if (map[i][j] != '0') {
+            if (map[i][j] != -1 ) {
                 QGraphicsPixmapItem* roadItem = new QGraphicsPixmapItem(road);
                 // Устанавливаем размер плитки дорожки
                 roadItem->setPixmap(road.scaled(tileSize, tileSize));
                 // Устанавливаем позицию элемента дорожки
-                roadItem->setPos(j * tileSize, i * tileSize);
+                roadItem->setPos( j * tileSize, i * tileSize);
                 // Добавляем элемент дорожки в сцену
                 addItem(roadItem);
             }
@@ -259,31 +222,57 @@ void GameScene::drawMap(){
 void GameScene::initializePlayerImages()
 {
     // Инициализация изображений игроков
-    playerImages[0] = QPixmap("C:/Users/nikit/ActionGame/Resource/ball.png");
-    playerImages[1] = QPixmap("C:/Users/nikit/ActionGame/Resource/cloud.png");
+    playerImages[0] = QPixmap("C:/Users/vtali/Documents/ActionGame/Resource/cloud.png");
+    playerImages[1] = QPixmap("C:/Users/vtali/Documents/ActionGame/Resource/ball.png");
+    QPixmap playerPixmap0 = playerImages[0];
+    // Масштабируем картинку до заданного размера
+    playerPixmap0 = playerPixmap0.scaled(40, 40, Qt::KeepAspectRatio);
+    // Создаем графический элемент для картинки игрока
+    QGraphicsPixmapItem* playerItem0 = new QGraphicsPixmapItem(playerPixmap0);
+    playerItem0->setPos(coordination[0]);
+    this->addItem(playerItem0);
+    QPixmap playerPixmap1 = playerImages[1];
+    // Масштабируем картинку до заданного размера
+    playerPixmap1 = playerPixmap1.scaled(40, 40, Qt::KeepAspectRatio);
+    // Создаем графический элемент для картинки игрока
+    QGraphicsPixmapItem* playerItem1 = new QGraphicsPixmapItem(playerPixmap1);
+    playerItem1->setPos(coordination[0]);
+    this->addItem(playerItem1);
+
 }
 
-void GameScene::drawPlayers(std::vector<std::pair<QPoint, QString>>& m_players) {
-    // Получаем размер клетки
-    const int cellSize = 40; // Пример размера клетки
+std::vector<QGraphicsPixmapItem*> playerGraphicsItems;
+
+void GameScene::redrawPlayers(std::vector<int>& m, int player_index) {
     // Получаем количество игроков
-    const int numPlayers = m_players.size();
+    const int numPlayers = m.size();
     // Определяем размер картинок игроков
     int playerImageSize = 40;
-    // Перебираем всех игроков
-    for (size_t i = 0; i < numPlayers; ++i) {
-        QPixmap playerPixmap = playerImages[i];
-        // Масштабируем картинку до заданного размера
-        playerPixmap = playerPixmap.scaled(playerImageSize, playerImageSize, Qt::KeepAspectRatio);
-        // Создаем графический элемент для картинки игрока
-        QGraphicsPixmapItem* playerItem = new QGraphicsPixmapItem(playerPixmap);
-        // Вычисляем координаты для размещения картинки
-        int x = startCoord.x() + i*playerImageSize;
-        int y = startCoord.y();
-        // Устанавливаем позицию графического элемента
-        playerItem->setPos(360, 320);
-        // Устанавливаем выравнивание по верхнему краю
-        // Добавляем графический элемент на сцену
-        this->addItem(playerItem);
+
+            // Если это первый ход, нужно инициализировать вектор графических элементов
+    if (playerGraphicsItems.empty()) {
+        playerGraphicsItems.resize(numPlayers, nullptr);
     }
+
+    // Если у игрока уже есть графический элемент, удаляем его
+    if (playerGraphicsItems[player_index] != nullptr) {
+        this->removeItem(playerGraphicsItems[player_index]);
+        delete playerGraphicsItems[player_index];
+        playerGraphicsItems[player_index] = nullptr;
+    }
+
+            // Получаем изображение для текущего игрока из мапы
+    QPixmap playerPixmap = playerImages[player_index];
+    // Масштабируем картинку до заданного размера
+    playerPixmap = playerPixmap.scaled(playerImageSize, playerImageSize, Qt::KeepAspectRatio);
+
+            // Создаем новый графический элемент для картинки игрока
+    QGraphicsPixmapItem* playerItem = new QGraphicsPixmapItem(playerPixmap);
+    // Устанавливаем позицию игрока на поле, используя координаты из вектора coordination
+    playerItem->setPos(coordination[m[player_index]].x(), coordination[m[player_index]].y());
+    // Добавляем игрока на сцену
+    this->addItem(playerItem);
+
+            // Сохраняем указатель на новый элемент
+    playerGraphicsItems[player_index] = playerItem;
 }

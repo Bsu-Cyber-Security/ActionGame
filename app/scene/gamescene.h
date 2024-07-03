@@ -24,9 +24,11 @@ class GameScene : public QGraphicsScene {
     void readLevelsFile(QString pathFile);
     void runLevel();
     void drawMap();
-    void drawPlayers(std::vector<std::pair<QPoint, QString>>&);
+    //void drawPlayers(std::vector<int>&);
+    void initializePlayers(std::vector<int>&);
     void initializePlayerImages();
-    void showDiceAnimation();
+    void showDiceAnimation(int);
+    void redrawPlayers(std::vector<int>&, int);
     QWidget* buttonWindow;
     QLabel* diceLabel = nullptr; // Лейбл для анимации
     QVBoxLayout* mainLayout;
@@ -38,8 +40,9 @@ class GameScene : public QGraphicsScene {
     QPushButton* button = new QPushButton("Click me");
 
     bool gameIsActive;
-   private slots:
-    void Click();
+    bool CompareCoord(int);
+   // private slots:
+   //  void Click();
 
 
 };
